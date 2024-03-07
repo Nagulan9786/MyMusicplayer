@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>vibeplayer</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    <div class="container">
+        <h4>MusicPlayer</h4>
+        <img id="trck_img">
+        <p id="title">title.mp3</p>
+        <p id="artist">Artist</p>
+        <input type="range" id="duration_slide" min="0" max="100" value="0"
+        onclick="change_duration()">
+        <button onclick="previous_one()" id="prev"><i class="fa fa-step-backward"></i></button>
+        <button onclick="just_play()" id="play"><i class="fa fa-play"></i></button>
+        <button onclick="next_one()" id="nex"><i class="fa fa-step-forward"></i></button>
+    </div>
+    <script>
+        let prev=document.querySelector('#prev');
+        let play=document.querySelector('#play');
+        let nex=document.querySelector('#nex');
+        let title=document.querySelector('#title');
+        let artist=document.querySelector('#artist');
+        let slider=document.querySelector('#duration_slide');
+        let trck_img=document.querySelector('#trck_img');
+        let timer;
+        let autoplay=1;
+        let index_no=0;
+        let playing_song=false;
+        let track=document.createElement('audio');
+        let all_songs=[{
+            name:"first song",
+            path:"music/song1.mp3",
+            img:"images/ani.jpg",
+            artist:"ANIRUDH"
+        },
+        {
+            name:"second song",
+            path:"music/song2.mp3",
+            img:"images/desktop-wallpaper-yuvan-shankar-raja.jpg",
+            artist:"YUVANSHANKARRAJA"
+        },{
+            name:"third song",
+            path:"music/song3.mp3",
+            img:"images/deva2.jpg",
+            artist:"DEVA"
+        }
+    ];
+    function load_track(index_no){
+        clearInterval(timer);
+        reset_slider();
+        track.src=all_songs[index_no].path;
+        title.innerHTML=all_songs[index_no].name;
+        trck_img.src=all_songs[index_no].img;
+        artist.innerHTML=all_songs[index_no].artist;
+        timer=setInterval(range_slider,1000);
+        total.innerHTML=all_songs.length;
+        present.innerHTML=index_no+1;
+    }
+    load_track(index_no);
+    function just_play(){
+        if(playing_song==false){
+            playsong();
+        }else{
+            pausesong();
+        }
+    }
+    function reset_slider(){
+        slider.value=0;
+    }
+    function playsong(){
+        track.play();
+        playing_song=true;
+        play.innerHTML='<i class="fa fa-pause"></i>';
+    }
+    function pausesong(){
+        track.pause();
+        playing_song=false;
+        play.innerHTML='<i class="fa fa-play"></i>';
+    }
+    function next_one(){
+        if(index_no < all_songs.length-1){
+            index_no +=1;
+            load_track(index_no);
+            playsong();
+        }
+        else{
+            index_no=0;
+            load_track(index_no);
+            playsong();
+        }
+    }
+    function previous_one(){
+        if(index_no !=0 ){
+            index_no -=1;
+            load_track(index_no);
+            playsong();
+        }else{
+            index_no=all_songs.length-1;
+            load_track(index_no);
+            playsong();
+        }
+    }
+    function change_duration(){
+        slider_position=track.duration*(slider.value/100);
+        track.currentTime=slider_position;
+    }
+    </script>
+</body>
+</html>
